@@ -881,6 +881,17 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-tertiary);
 }
 
+.neighborhood-card.active {
+  border-color: var(--primary);
+  background: var(--primary-50);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+[data-theme="dark"] .neighborhood-card.active {
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
 /* --- Jobs Preview Section --- */
 .jobs-preview {
   padding: var(--space-16) var(--space-4);
@@ -1046,6 +1057,126 @@ h1, h2, h3, h4, h5, h6 {
   outline: none;
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+.filter-search-wrapper {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.filter-search-wrapper .filter-search {
+  width: 100%;
+  min-width: auto;
+}
+
+/* --- Search Suggestions (Autocomplete) --- */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-top: var(--space-1);
+  display: none;
+}
+
+.search-suggestions.active {
+  display: block;
+}
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.search-suggestion-item:hover {
+  background: var(--bg-secondary);
+}
+
+.search-suggestion-item strong {
+  color: var(--primary);
+}
+
+.suggestion-category {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+}
+
+/* --- Active Filter Tags --- */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.active-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--primary-50);
+  color: var(--primary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--primary-200);
+}
+
+[data-theme="dark"] .active-filter-tag {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.active-filter-tag button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  line-height: 1;
+  padding: 0;
+  margin-left: 2px;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.active-filter-tag button:hover {
+  opacity: 1;
+}
+
+.clear-all-filters {
+  background: none;
+  border: none;
+  color: var(--error);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  transition: opacity var(--transition-fast);
+}
+
+.clear-all-filters:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
 
 .filter-toggles {
@@ -2104,6 +2235,25 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-semibold);
 }
 
+.no-results-suggestion {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  margin: var(--space-1);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.no-results-suggestion:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
 /* --- Submit Business Modal --- */
 .submit-modal .form-group {
   margin-bottom: var(--space-4);
@@ -2329,6 +2479,10 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .filter-search {
+    min-width: auto;
+  }
+
+  .filter-search-wrapper {
     min-width: auto;
   }
 

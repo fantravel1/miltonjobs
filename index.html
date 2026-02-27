@@ -120,6 +120,7 @@
         </button>
         <button class="search-btn" id="heroSearchBtn">Search</button>
       </div>
+      <div class="search-suggestions" id="heroSuggestions"></div>
     </div>
 
     <div class="cuisine-tags">
@@ -279,12 +280,16 @@
           <option value="rating">Rating</option>
         </select>
       </div>
-      <input type="search" class="filter-search" id="directorySearch" placeholder="Search within results..." aria-label="Search within directory">
+      <div class="filter-search-wrapper">
+        <input type="search" class="filter-search" id="directorySearch" placeholder="Search within results..." aria-label="Search within directory">
+        <div class="search-suggestions" id="dirSuggestions"></div>
+      </div>
     </div>
 
     <!-- Results Info -->
     <div class="results-info">
       <span class="results-count" id="resultsCount">Loading businesses...</span>
+      <div id="activeFilters" class="active-filters"></div>
       <div class="view-toggles">
         <button class="view-toggle active" data-view="grid" aria-label="Grid view">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
