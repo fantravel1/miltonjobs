@@ -106,6 +106,8 @@
     'Hospital': '&#127973;',
     'Employment Agency': '&#128188;',
     'Manufacturing': '&#127981;',
+    'Government': '&#127963;',
+    'Retail': '&#128717;',
     'default': '&#128188;'
   };
 
@@ -117,6 +119,7 @@
     loadBusinesses();
     setupEventListeners();
     updateFavoritesCount();
+    initViewMode();
     hideLoadingScreen();
   }
 
@@ -149,6 +152,16 @@
     }
   }
 
+  // ─── View Mode Init ───
+  function initViewMode() {
+    // Restore saved view mode toggle button active state
+    document.querySelectorAll('.view-toggle').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === state.viewMode);
+    });
+    const grid = document.getElementById('businessGrid');
+    if (grid) grid.classList.toggle('list-view', state.viewMode === 'list');
+  }
+
   // ─── Data Loading ───
   function loadBusinesses() {
     fetch('/data/businesses.json')
@@ -157,6 +170,7 @@
         state.businesses = data;
         state.filteredBusinesses = [...data];
         populateFilters();
+        buildSearchIndex();
         renderBusinesses();
         renderFeaturedCarousel();
         updateStats();
@@ -166,6 +180,37 @@
         state.businesses = [];
         state.filteredBusinesses = [];
       });
+  }
+
+  // ─── Search Index for Autocomplete ───
+  let searchIndex = [];
+
+  function buildSearchIndex() {
+    const names = new Set();
+    const categories = new Set();
+    const neighborhoods = new Set();
+    const cuisines = new Set();
+
+    state.businesses.forEach(b => {
+      if (b.name) names.add(b.name);
+      if (b.category) categories.add(b.category);
+      if (b.neighborhood) neighborhoods.add(b.neighborhood);
+      if (b.cuisine) cuisines.add(b.cuisine);
+    });
+
+    searchIndex = [];
+    names.forEach(n => searchIndex.push({ text: n, type: 'Business' }));
+    categories.forEach(c => searchIndex.push({ text: c, type: 'Category' }));
+    neighborhoods.forEach(n => searchIndex.push({ text: n, type: 'Area' }));
+    cuisines.forEach(c => searchIndex.push({ text: c, type: 'Cuisine' }));
+  }
+
+  // ─── Sync Both Search Inputs ───
+  function syncSearchInputs(value) {
+    const hero = document.getElementById('heroSearch');
+    const dir = document.getElementById('directorySearch');
+    if (hero) hero.value = value;
+    if (dir) dir.value = value;
   }
 
   // ─── Event Listeners ───
@@ -183,6 +228,13 @@
         const isOpen = mobileNav.classList.contains('active');
         mobileMenuBtn.setAttribute('aria-expanded', isOpen);
       });
+      // Close mobile menu when clicking a nav link
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
     }
 
     // Announcement bar close
@@ -194,16 +246,57 @@
       });
     }
 
-    // Search
-    const searchInput = document.getElementById('heroSearch');
-    const searchBtn = document.getElementById('heroSearchBtn');
-    if (searchInput) {
-      searchInput.addEventListener('input', debounce(handleSearch, 300));
-      searchInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') handleSearch();
+    // Hero Search - with autocomplete
+    const heroSearch = document.getElementById('heroSearch');
+    const heroSearchBtn = document.getElementById('heroSearchBtn');
+    const heroSuggestions = document.getElementById('heroSuggestions');
+    if (heroSearch) {
+      heroSearch.addEventListener('input', () => {
+        showSuggestions(heroSearch.value, heroSuggestions);
+        // Live sync to directory search
+        const dir = document.getElementById('directorySearch');
+        if (dir) dir.value = heroSearch.value;
+        debounceSearch();
+      });
+      heroSearch.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          hideSuggestions();
+          handleSearch();
+        }
+        if (e.key === 'Escape') hideSuggestions();
+      });
+      heroSearch.addEventListener('focus', () => {
+        if (heroSearch.value.length > 0) showSuggestions(heroSearch.value, heroSuggestions);
       });
     }
-    if (searchBtn) searchBtn.addEventListener('click', handleSearch);
+    if (heroSearchBtn) heroSearchBtn.addEventListener('click', () => { hideSuggestions(); handleSearch(); });
+
+    // Directory Search - with autocomplete
+    const dirSearch = document.getElementById('directorySearch');
+    const dirSuggestions = document.getElementById('dirSuggestions');
+    if (dirSearch) {
+      dirSearch.addEventListener('input', () => {
+        showSuggestions(dirSearch.value, dirSuggestions);
+        // Live sync to hero search
+        const hero = document.getElementById('heroSearch');
+        if (hero) hero.value = dirSearch.value;
+        debounceFilterChange();
+      });
+      dirSearch.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { hideSuggestions(); handleFilterChange(); }
+        if (e.key === 'Escape') hideSuggestions();
+      });
+      dirSearch.addEventListener('focus', () => {
+        if (dirSearch.value.length > 0) showSuggestions(dirSearch.value, dirSuggestions);
+      });
+    }
+
+    // Close suggestions on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-container') && !e.target.closest('.filter-search-wrapper')) {
+        hideSuggestions();
+      }
+    });
 
     // Voice search
     const voiceBtn = document.getElementById('voiceSearchBtn');
@@ -213,16 +306,14 @@
       voiceBtn.style.display = 'none';
     }
 
-    // Filter controls
+    // Filter controls (dropdowns)
     const catFilter = document.getElementById('categoryFilter');
     const neighborhoodFilter = document.getElementById('neighborhoodFilter');
     const sortFilter = document.getElementById('sortFilter');
-    const directorySearch = document.getElementById('directorySearch');
 
     if (catFilter) catFilter.addEventListener('change', handleFilterChange);
     if (neighborhoodFilter) neighborhoodFilter.addEventListener('change', handleFilterChange);
     if (sortFilter) sortFilter.addEventListener('change', handleFilterChange);
-    if (directorySearch) directorySearch.addEventListener('input', debounce(handleFilterChange, 300));
 
     // View toggle
     document.querySelectorAll('.view-toggle').forEach(btn => {
@@ -232,9 +323,7 @@
         document.querySelectorAll('.view-toggle').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const grid = document.getElementById('businessGrid');
-        if (grid) {
-          grid.classList.toggle('list-view', state.viewMode === 'list');
-        }
+        if (grid) grid.classList.toggle('list-view', state.viewMode === 'list');
       });
     });
 
@@ -264,9 +353,17 @@
     document.querySelectorAll('.category-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         const cat = chip.dataset.category;
-        state.categoryFilter = cat;
+        // Toggle: if same category clicked again, clear it
+        if (state.categoryFilter === cat) {
+          state.categoryFilter = 'all';
+        } else {
+          state.categoryFilter = cat;
+        }
         const catSelect = document.getElementById('categoryFilter');
-        if (catSelect) catSelect.value = cat;
+        if (catSelect) catSelect.value = state.categoryFilter;
+        // Update active chip
+        updateActiveCategoryChip();
+        state.currentPage = 1;
         applyFilters();
         document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
       });
@@ -276,9 +373,15 @@
     document.querySelectorAll('.neighborhood-card').forEach(card => {
       card.addEventListener('click', () => {
         const neighborhood = card.dataset.neighborhood;
-        state.neighborhoodFilter = neighborhood;
+        if (state.neighborhoodFilter === neighborhood) {
+          state.neighborhoodFilter = 'all';
+        } else {
+          state.neighborhoodFilter = neighborhood;
+        }
         const nSelect = document.getElementById('neighborhoodFilter');
-        if (nSelect) nSelect.value = neighborhood;
+        if (nSelect) nSelect.value = state.neighborhoodFilter;
+        updateActiveNeighborhoodCard();
+        state.currentPage = 1;
         applyFilters();
         document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
       });
@@ -287,11 +390,12 @@
     // Cuisine tags
     document.querySelectorAll('.cuisine-tag').forEach(tag => {
       tag.addEventListener('click', () => {
-        const searchInput = document.getElementById('heroSearch');
-        if (searchInput) {
-          searchInput.value = tag.textContent;
-          handleSearch();
-        }
+        const q = tag.textContent.trim();
+        syncSearchInputs(q);
+        state.searchQuery = q.toLowerCase();
+        state.currentPage = 1;
+        applyFilters();
+        document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
       });
     });
 
@@ -365,11 +469,17 @@
     }
   }
 
+  // ─── Debounced handlers ───
+  const debounceSearch = debounce(handleSearch, 300);
+  const debounceFilterChange = debounce(handleFilterChange, 300);
+
   // ─── Search ───
   function handleSearch() {
     const input = document.getElementById('heroSearch');
     if (!input) return;
-    state.searchQuery = input.value.trim().toLowerCase();
+    const q = input.value.trim();
+    state.searchQuery = q.toLowerCase();
+    syncSearchInputs(q);
     state.currentPage = 1;
     applyFilters();
     document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
@@ -386,25 +496,87 @@
 
     const btn = document.getElementById('voiceSearchBtn');
     if (btn) btn.classList.add('listening');
+    showToast('Listening... speak now', 'info');
 
     recognition.onresult = e => {
       const transcript = e.results[0][0].transcript;
-      const input = document.getElementById('heroSearch');
-      if (input) {
-        input.value = transcript;
-        handleSearch();
-      }
+      syncSearchInputs(transcript);
+      state.searchQuery = transcript.toLowerCase();
+      state.currentPage = 1;
+      applyFilters();
+      document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     recognition.onend = () => {
       if (btn) btn.classList.remove('listening');
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (e) => {
       if (btn) btn.classList.remove('listening');
+      if (e.error === 'no-speech') {
+        showToast('No speech detected. Please try again.', 'error');
+      } else if (e.error === 'not-allowed') {
+        showToast('Microphone access denied. Please enable it in your browser settings.', 'error');
+      } else {
+        showToast('Voice search failed. Please try typing instead.', 'error');
+      }
     };
 
     recognition.start();
+  }
+
+  // ─── Autocomplete Suggestions ───
+  function showSuggestions(query, container) {
+    if (!container) return;
+    const q = query.trim().toLowerCase();
+    if (q.length < 1) {
+      container.classList.remove('active');
+      return;
+    }
+
+    const matches = searchIndex
+      .filter(item => item.text.toLowerCase().includes(q))
+      .slice(0, 8);
+
+    if (matches.length === 0) {
+      container.classList.remove('active');
+      return;
+    }
+
+    container.innerHTML = matches.map(m =>
+      `<div class="search-suggestion-item" data-value="${escapeHtml(m.text)}">
+        <span>${highlightMatch(m.text, q)}</span>
+        <span class="suggestion-category">${escapeHtml(m.type)}</span>
+      </div>`
+    ).join('');
+
+    container.classList.add('active');
+
+    // Attach click handlers
+    container.querySelectorAll('.search-suggestion-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const val = item.dataset.value;
+        syncSearchInputs(val);
+        state.searchQuery = val.toLowerCase();
+        state.currentPage = 1;
+        hideSuggestions();
+        applyFilters();
+        document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+
+  function hideSuggestions() {
+    document.querySelectorAll('.search-suggestions').forEach(s => s.classList.remove('active'));
+  }
+
+  function highlightMatch(text, query) {
+    const idx = text.toLowerCase().indexOf(query);
+    if (idx < 0) return escapeHtml(text);
+    const before = text.slice(0, idx);
+    const match = text.slice(idx, idx + query.length);
+    const after = text.slice(idx + query.length);
+    return escapeHtml(before) + '<strong>' + escapeHtml(match) + '</strong>' + escapeHtml(after);
   }
 
   // ─── Filtering ───
@@ -417,7 +589,17 @@
     if (catSelect) state.categoryFilter = catSelect.value;
     if (neighborhoodSelect) state.neighborhoodFilter = neighborhoodSelect.value;
     if (sortSelect) state.sortBy = sortSelect.value;
-    if (searchInput) state.searchQuery = searchInput.value.trim().toLowerCase();
+    if (searchInput) {
+      const q = searchInput.value.trim();
+      state.searchQuery = q.toLowerCase();
+      // Sync to hero
+      const hero = document.getElementById('heroSearch');
+      if (hero) hero.value = q;
+    }
+
+    // Update active chip / card indicators
+    updateActiveCategoryChip();
+    updateActiveNeighborhoodCard();
 
     state.currentPage = 1;
     applyFilters();
@@ -436,15 +618,15 @@
       results = results.filter(b => b.neighborhood === state.neighborhoodFilter);
     }
 
-    // Search query
+    // Search query - split into words for better matching
     if (state.searchQuery) {
-      const q = state.searchQuery;
+      const words = state.searchQuery.split(/\s+/).filter(Boolean);
       results = results.filter(b => {
         const searchable = [
           b.name, b.category, b.neighborhood, b.address,
           b.description, b.services, b.cuisine
         ].filter(Boolean).join(' ').toLowerCase();
-        return searchable.includes(q);
+        return words.every(word => searchable.includes(word));
       });
     }
 
@@ -463,6 +645,69 @@
     state.filteredBusinesses = results;
     renderBusinesses();
     updateResultsCount();
+    updateActiveFilterIndicators();
+  }
+
+  // ─── Active Filter Indicators ───
+  function updateActiveCategoryChip() {
+    document.querySelectorAll('.category-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.category === state.categoryFilter);
+    });
+  }
+
+  function updateActiveNeighborhoodCard() {
+    document.querySelectorAll('.neighborhood-card').forEach(card => {
+      card.classList.toggle('active', card.dataset.neighborhood === state.neighborhoodFilter);
+    });
+  }
+
+  function updateActiveFilterIndicators() {
+    // Show active filter tags near results
+    const container = document.getElementById('activeFilters');
+    if (!container) return;
+
+    const tags = [];
+    if (state.categoryFilter && state.categoryFilter !== 'all') {
+      tags.push({ label: state.categoryFilter, type: 'category' });
+    }
+    if (state.neighborhoodFilter && state.neighborhoodFilter !== 'all') {
+      tags.push({ label: state.neighborhoodFilter, type: 'neighborhood' });
+    }
+    if (state.searchQuery) {
+      tags.push({ label: '"' + state.searchQuery + '"', type: 'search' });
+    }
+
+    if (tags.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = tags.map(t =>
+      `<span class="active-filter-tag" data-type="${t.type}">
+        ${escapeHtml(t.label)}
+        <button onclick="window.MiltonJobs.clearFilter('${t.type}')" aria-label="Remove filter">&times;</button>
+      </span>`
+    ).join('') +
+    `<button class="clear-all-filters" onclick="window.MiltonJobs.resetFilters()">Clear all</button>`;
+  }
+
+  function clearFilter(type) {
+    if (type === 'category') {
+      state.categoryFilter = 'all';
+      const sel = document.getElementById('categoryFilter');
+      if (sel) sel.value = 'all';
+      updateActiveCategoryChip();
+    } else if (type === 'neighborhood') {
+      state.neighborhoodFilter = 'all';
+      const sel = document.getElementById('neighborhoodFilter');
+      if (sel) sel.value = 'all';
+      updateActiveNeighborhoodCard();
+    } else if (type === 'search') {
+      state.searchQuery = '';
+      syncSearchInputs('');
+    }
+    state.currentPage = 1;
+    applyFilters();
   }
 
   // ─── Populate Filters ───
@@ -473,13 +718,19 @@
     const catSelect = document.getElementById('categoryFilter');
     if (catSelect) {
       catSelect.innerHTML = '<option value="all">All Categories</option>' +
-        categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        categories.map(c => {
+          const count = state.businesses.filter(b => b.category === c).length;
+          return `<option value="${escapeHtml(c)}">${escapeHtml(c)} (${count})</option>`;
+        }).join('');
     }
 
     const neighborhoodSelect = document.getElementById('neighborhoodFilter');
     if (neighborhoodSelect) {
       neighborhoodSelect.innerHTML = '<option value="all">All Neighborhoods</option>' +
-        neighborhoods.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+        neighborhoods.map(n => {
+          const count = state.businesses.filter(b => b.neighborhood === n).length;
+          return `<option value="${escapeHtml(n)}">${escapeHtml(n)} (${count})</option>`;
+        }).join('');
     }
   }
 
@@ -493,12 +744,18 @@
     const page = state.filteredBusinesses.slice(start, end);
 
     if (page.length === 0) {
+      // Build suggestion list from popular categories
+      const suggestions = ['Restaurant', 'Coffee Shop', 'Pizza', 'Dentist', 'Auto Repair', 'Hair Salon']
+        .map(s => `<button class="no-results-suggestion" onclick="window.MiltonJobs.searchFor('${s}')">${s}</button>`)
+        .join(' ');
+
       grid.innerHTML = `
         <div class="no-results" style="grid-column: 1 / -1;">
           <div class="no-results-icon">&#128269;</div>
           <h3>No businesses found</h3>
           <p>Try adjusting your search or filters to find what you're looking for.</p>
-          <button onclick="document.getElementById('categoryFilter').value='all';document.getElementById('neighborhoodFilter').value='all';document.getElementById('directorySearch').value='';window.MiltonJobs.resetFilters();">Clear Filters</button>
+          <div style="margin-bottom:var(--space-4);">${suggestions}</div>
+          <button onclick="window.MiltonJobs.resetFilters()">Clear All Filters</button>
         </div>`;
       renderPagination();
       return;
@@ -532,7 +789,7 @@
     const icon = getIcon(biz.category);
     const isFav = state.favorites.includes(biz.id);
     const rating = biz.rating ? `<span class="card-rating">&#11088; ${biz.rating}</span>` : '';
-    const halal = biz.halal ? '<span class="halal-badge">&#9790; Halal</span>' : '';
+    const halal = biz.halal ? ' <span class="halal-badge">&#9790; Halal</span>' : '';
 
     return `
       <div class="business-card" data-id="${escapeHtml(biz.id)}">
@@ -545,8 +802,7 @@
           </div>
         </div>
         <h3>${escapeHtml(biz.name)}</h3>
-        <span class="card-category-tag">${escapeHtml(biz.category)}</span>
-        ${halal}
+        <span class="card-category-tag">${escapeHtml(biz.category)}</span>${halal}
         <p class="card-services">${escapeHtml(biz.description || biz.services || '')}</p>
         <div class="card-footer">
           ${rating}
@@ -554,6 +810,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             ${escapeHtml(biz.neighborhood || '')}
           </span>
+          ${biz.phone ? `<span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>` : ''}
         </div>
       </div>`;
   }
@@ -603,7 +860,7 @@
     if (page < 1 || page > totalPages) return;
     state.currentPage = page;
     renderBusinesses();
-    document.getElementById('directory')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('businessGrid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ─── Results Count ───
@@ -611,7 +868,7 @@
     const el = document.getElementById('resultsCount');
     if (el) {
       const total = state.filteredBusinesses.length;
-      const start = (state.currentPage - 1) * state.perPage + 1;
+      const start = total === 0 ? 0 : (state.currentPage - 1) * state.perPage + 1;
       const end = Math.min(state.currentPage * state.perPage, total);
       el.innerHTML = total === 0
         ? 'No businesses found'
@@ -649,7 +906,6 @@
     const track = document.getElementById('carouselTrack');
     if (!track || state.businesses.length === 0) return;
 
-    // Pick some featured businesses (first 9 or random selection)
     const featured = state.businesses
       .filter(b => b.featured || b.rating >= 4.5)
       .slice(0, 9);
@@ -694,7 +950,10 @@
 
     const icon = getIcon(biz.category);
     const isFav = state.favorites.includes(biz.id);
+    const header = overlay.querySelector('.modal-header h2');
     const body = overlay.querySelector('.modal-body');
+
+    if (header) header.textContent = 'Business Details';
 
     const phoneLink = biz.phone ? `<a href="tel:${biz.phone}">${escapeHtml(biz.phone)}</a>` : 'Not listed';
     const websiteLink = biz.website ? `<a href="${escapeHtml(biz.website)}" target="_blank" rel="noopener">${escapeHtml(biz.website.replace(/^https?:\/\//, ''))}</a>` : 'Not listed';
@@ -708,6 +967,7 @@
           <p class="detail-category">${escapeHtml(biz.category)}</p>
           <p class="detail-neighborhood">&#128205; ${escapeHtml(biz.neighborhood || 'Milton')}</p>
           ${biz.halal ? '<span class="halal-badge">&#9790; Halal Certified</span>' : ''}
+          ${biz.rating ? '<span class="card-rating" style="margin-top:4px;display:inline-block;">&#11088; ' + biz.rating + '</span>' : ''}
         </div>
       </div>
 
@@ -737,6 +997,7 @@
         <a href="${mapsUrl}" target="_blank" rel="noopener" class="detail-action-btn primary">&#128205; Get Directions</a>
         ${biz.phone ? `<a href="tel:${biz.phone}" class="detail-action-btn secondary">&#128222; Call Now</a>` : ''}
         <button class="detail-action-btn secondary" onclick="window.MiltonJobs.toggleFav('${escapeHtml(biz.id)}')">${isFav ? '&#10084; Saved' : '&#128153; Save'}</button>
+        ${biz.website ? `<a href="${escapeHtml(biz.website)}" target="_blank" rel="noopener" class="detail-action-btn secondary">&#127760; Website</a>` : ''}
       </div>`;
 
     overlay.classList.add('active');
@@ -822,9 +1083,7 @@
   // ─── Helpers ───
   function getIcon(category) {
     if (!category) return categoryIcons['default'];
-    // Try exact match first
     if (categoryIcons[category]) return categoryIcons[category];
-    // Try partial match
     const key = Object.keys(categoryIcons).find(k =>
       category.toLowerCase().includes(k.toLowerCase()) ||
       k.toLowerCase().includes(category.toLowerCase())
@@ -853,6 +1112,31 @@
     state.searchQuery = '';
     state.currentPage = 1;
     state.sortBy = 'name';
+    // Reset all UI elements
+    syncSearchInputs('');
+    const catSel = document.getElementById('categoryFilter');
+    const nSel = document.getElementById('neighborhoodFilter');
+    const sSel = document.getElementById('sortFilter');
+    if (catSel) catSel.value = 'all';
+    if (nSel) nSel.value = 'all';
+    if (sSel) sSel.value = 'name';
+    updateActiveCategoryChip();
+    updateActiveNeighborhoodCard();
+    applyFilters();
+  }
+
+  function searchFor(query) {
+    syncSearchInputs(query);
+    state.searchQuery = query.toLowerCase();
+    state.categoryFilter = 'all';
+    state.neighborhoodFilter = 'all';
+    const catSel = document.getElementById('categoryFilter');
+    const nSel = document.getElementById('neighborhoodFilter');
+    if (catSel) catSel.value = 'all';
+    if (nSel) nSel.value = 'all';
+    state.currentPage = 1;
+    updateActiveCategoryChip();
+    updateActiveNeighborhoodCard();
     applyFilters();
   }
 
@@ -862,7 +1146,9 @@
     showDetail,
     toggleFav: toggleFavorite,
     resetFilters,
-    closeModal
+    closeModal,
+    clearFilter,
+    searchFor
   };
 
 })();
