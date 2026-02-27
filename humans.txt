@@ -1,0 +1,15 @@
+/* TEAM */
+MiltonJobs.com
+A free community resource for Milton, Ontario
+Contact: hello@miltonjobs.com
+
+/* SITE */
+Standards: HTML5, CSS3, JavaScript ES6+
+Software: Static site, no frameworks
+Accessibility: WCAG 2.1 AA
+Language: English (Canadian)
+
+/* LOCATION */
+Milton, Ontario, Canada
+Halton Region
+Greater Toronto Area

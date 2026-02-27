@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://miltonjobs.com/sitemap.xml
+
+# MiltonJobs.com - Free Milton, Ontario Business Directory & Jobs Hub
+# Contact: hello@miltonjobs.com

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en-CA" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiltonJobs.com - Milton Ontario Business Directory & Jobs Hub | Free Local Guide</title>
+<meta name="description" content="Free hyperlocal business directory and jobs hub for Milton, Ontario. Find restaurants, shops, services, healthcare, and career opportunities in Milton, ON.">
+<meta name="keywords" content="Milton Ontario businesses, Milton jobs, Milton restaurants, Milton directory, Milton ON, Halton Region, Milton employment, Milton services">
+<meta name="author" content="MiltonJobs.com">
+<meta name="robots" content="index, follow">
+<meta name="geo.region" content="CA-ON">
+<meta name="geo.placename" content="Milton">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://miltonjobs.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="MiltonJobs.com - Milton Ontario Business Directory & Jobs Hub">
+<meta property="og:description" content="Free hyperlocal business directory and jobs hub for Milton, Ontario. Find local businesses, restaurants, services, and career opportunities.">
+<meta property="og:url" content="https://miltonjobs.com/">
+<meta property="og:site_name" content="MiltonJobs.com">
+<meta property="og:locale" content="en_CA">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MiltonJobs.com - Milton Ontario Business Directory & Jobs Hub">
+<meta name="twitter:description" content="Free hyperlocal business directory and jobs hub for Milton, Ontario.">
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MiltonJobs">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Styles -->
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Skip to Content -->
+<a href="#main" class="skip-to-content">Skip to main content</a>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <p>Loading MiltonJobs.com...</p>
+</div>
+
+<!-- Announcement Bar -->
+<div class="announcement-bar" role="banner">
+  &#127881; Milton's #1 free business directory &mdash; <a href="#directory">Browse local businesses</a> or <a href="#jobs">find jobs</a> in your community!
+  <button class="close-announcement" id="closeAnnouncement" aria-label="Close announcement">&times;</button>
+</div>
+
+<!-- Header -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="/" class="logo" aria-label="MiltonJobs.com - Home">
+      <div class="logo-icon">M</div>
+      Milton<span>Jobs</span>.com
+    </a>
+
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="#directory">Directory</a>
+      <a href="#jobs">Jobs</a>
+      <a href="#neighborhoods">Neighborhoods</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="favorites-btn" id="favoritesBtn" aria-label="View saved businesses">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="favorites-count hidden" id="favoritesCount">0</span>
+      </button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Navigation -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <a href="#directory">&#128188; Directory</a>
+  <a href="#jobs">&#128188; Jobs</a>
+  <a href="#neighborhoods">&#127968; Neighborhoods</a>
+  <a href="#about">&#8505; About</a>
+  <a href="#contact">&#128231; Contact</a>
+</nav>
+
+<!-- Main Content -->
+<main id="main">
+
+<!-- Hero Section -->
+<section class="hero" role="banner">
+  <div class="hero-content">
+    <div class="hero-badge">&#127464;&#127462; Serving Milton, Ontario since 2024</div>
+    <h1>Discover Milton's <span class="highlight">Best Businesses</span> & Job Opportunities</h1>
+    <p>Your free, comprehensive guide to every business, restaurant, service, and career opportunity in Milton, Ontario.</p>
+
+    <div class="search-container">
+      <div class="search-wrapper">
+        <input type="search" id="heroSearch" placeholder="Search businesses, restaurants, services..." aria-label="Search Milton businesses" autocomplete="off">
+        <button class="voice-search-btn" id="voiceSearchBtn" aria-label="Voice search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button class="search-btn" id="heroSearchBtn">Search</button>
+      </div>
+    </div>
+
+    <div class="cuisine-tags">
+      <span class="cuisine-tag">Restaurants</span>
+      <span class="cuisine-tag">Coffee Shops</span>
+      <span class="cuisine-tag">Hair Salons</span>
+      <span class="cuisine-tag">Dentists</span>
+      <span class="cuisine-tag">Auto Repair</span>
+      <span class="cuisine-tag">Gyms</span>
+      <span class="cuisine-tag">Pizza</span>
+      <span class="cuisine-tag">Pharmacy</span>
+      <span class="cuisine-tag">Real Estate</span>
+      <span class="cuisine-tag">Indian</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-number" id="heroStatTotal">500+</span>
+        <span class="stat-label">Local Businesses</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-number" id="heroStatJobs">35+</span>
+        <span class="stat-label">Job Categories</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Free to Use</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Businesses Carousel -->
+<section class="featured-section" aria-label="Featured businesses">
+  <div class="section-header">
+    <h2>Featured Milton Businesses</h2>
+    <p>Discover popular local businesses in Milton, Ontario</p>
+  </div>
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack"></div>
+    <div class="carousel-nav">
+      <button class="carousel-btn" id="carouselPrev" aria-label="Previous">&#8249;</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="carouselNext" aria-label="Next">&#8250;</button>
+    </div>
+  </div>
+</section>
+
+<!-- Neighborhoods Section -->
+<section class="section" id="neighborhoods" aria-label="Milton neighborhoods">
+  <div class="section-header">
+    <h2>Explore Milton Neighborhoods</h2>
+    <p>Browse businesses by area in Milton, Ontario</p>
+  </div>
+  <div class="neighborhoods-grid">
+    <div class="neighborhood-card" data-neighborhood="Downtown Milton">
+      <div class="neighborhood-icon">&#127963;</div>
+      <h3>Downtown Milton</h3>
+      <p>Historic Main Street, shops, restaurants & cafes</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Timberlea">
+      <div class="neighborhood-icon">&#127794;</div>
+      <h3>Timberlea</h3>
+      <p>Established community with schools & services</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Harrison">
+      <div class="neighborhood-icon">&#127968;</div>
+      <h3>Harrison</h3>
+      <p>Growing neighbourhood with great amenities</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Scott">
+      <div class="neighborhood-icon">&#127793;</div>
+      <h3>Scott</h3>
+      <p>Family-friendly area with parks & trails</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Willmott">
+      <div class="neighborhood-icon">&#128150;</div>
+      <h3>Willmott</h3>
+      <p>Quiet residential neighbourhood</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Dempsey">
+      <div class="neighborhood-icon">&#128739;</div>
+      <h3>Dempsey</h3>
+      <p>New development with modern amenities</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Old Milton">
+      <div class="neighborhood-icon">&#127961;</div>
+      <h3>Old Milton</h3>
+      <p>Charming heritage area near downtown</p>
+    </div>
+    <div class="neighborhood-card" data-neighborhood="Bronte Meadows">
+      <div class="neighborhood-icon">&#127807;</div>
+      <h3>Bronte Meadows</h3>
+      <p>Mature neighbourhood with local shops</p>
+    </div>
+  </div>
+</section>
+
+<!-- Category Browser -->
+<section class="category-browser" aria-label="Browse by category">
+  <div class="section-header">
+    <h2>Browse by Category</h2>
+    <p>Find exactly what you need in Milton</p>
+  </div>
+  <div class="category-chips" id="categoryChips">
+    <button class="category-chip" data-category="Restaurant">&#127869; Restaurants</button>
+    <button class="category-chip" data-category="Fast Food">&#127828; Fast Food</button>
+    <button class="category-chip" data-category="Coffee Shop">&#9749; Coffee Shops</button>
+    <button class="category-chip" data-category="Pizza">&#127829; Pizza</button>
+    <button class="category-chip" data-category="Bakery">&#127856; Bakeries</button>
+    <button class="category-chip" data-category="Bar & Pub">&#127866; Bars & Pubs</button>
+    <button class="category-chip" data-category="Grocery Store">&#128722; Grocery Stores</button>
+    <button class="category-chip" data-category="Pharmacy">&#128138; Pharmacies</button>
+    <button class="category-chip" data-category="Bank">&#127974; Banks</button>
+    <button class="category-chip" data-category="Dentist">&#129463; Dentists</button>
+    <button class="category-chip" data-category="Doctor">&#129658; Doctors</button>
+    <button class="category-chip" data-category="Hair Salon">&#128135; Hair Salons</button>
+    <button class="category-chip" data-category="Barber Shop">&#128136; Barber Shops</button>
+    <button class="category-chip" data-category="Gym">&#127947; Gyms</button>
+    <button class="category-chip" data-category="Auto Repair">&#128295; Auto Repair</button>
+    <button class="category-chip" data-category="Auto Dealership">&#128663; Dealerships</button>
+    <button class="category-chip" data-category="Real Estate">&#127968; Real Estate</button>
+    <button class="category-chip" data-category="Law Office">&#9878; Lawyers</button>
+    <button class="category-chip" data-category="School">&#127979; Schools</button>
+    <button class="category-chip" data-category="Church">&#9962; Churches</button>
+    <button class="category-chip" data-category="Daycare">&#128118; Daycares</button>
+    <button class="category-chip" data-category="Veterinarian">&#128054; Vets</button>
+    <button class="category-chip" data-category="Hotel">&#127976; Hotels</button>
+    <button class="category-chip" data-category="Plumber">&#128295; Plumbers</button>
+    <button class="category-chip" data-category="Electrician">&#9889; Electricians</button>
+    <button class="category-chip" data-category="Cleaning Service">&#129529; Cleaning</button>
+  </div>
+</section>
+
+<!-- Business Directory -->
+<section class="directory-section section-alt" id="directory" aria-label="Business directory">
+  <div class="directory-container">
+    <div class="section-header">
+      <h2>Milton Business Directory</h2>
+      <p>Browse all verified local businesses in Milton, Ontario</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <select class="filter-select" id="categoryFilter" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+        </select>
+        <select class="filter-select" id="neighborhoodFilter" aria-label="Filter by neighborhood">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <select class="filter-select" id="sortFilter" aria-label="Sort by">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="category">Category</option>
+          <option value="neighborhood">Neighborhood</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
+      <input type="search" class="filter-search" id="directorySearch" placeholder="Search within results..." aria-label="Search within directory">
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info">
+      <span class="results-count" id="resultsCount">Loading businesses...</span>
+      <div class="view-toggles">
+        <button class="view-toggle active" data-view="grid" aria-label="Grid view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="view-toggle" data-view="list" aria-label="List view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Business Grid -->
+    <div class="business-grid" id="businessGrid">
+      <!-- Populated by JavaScript -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+</section>
+
+<!-- Jobs Preview Section -->
+<section class="jobs-preview section" id="jobs" aria-label="Job categories">
+  <div class="section-header">
+    <h2>Find Jobs in Milton, Ontario</h2>
+    <p>Explore career opportunities across Milton's growing industries</p>
+  </div>
+  <div class="jobs-grid">
+    <a href="/jobs/warehouse-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128230;</div>
+      <h3>Warehouse & Logistics Jobs</h3>
+      <p>Amazon, distribution centres, fulfillment, shipping & receiving positions along the 401 corridor.</p>
+      <span class="job-tag">High Demand</span>
+    </a>
+    <a href="/jobs/retail-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128717;</div>
+      <h3>Retail & Sales Jobs</h3>
+      <p>Store associates, cashiers, managers at Milton's shopping plazas and retail locations.</p>
+      <span class="job-tag">Entry Level Available</span>
+    </a>
+    <a href="/jobs/restaurant-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#127869;</div>
+      <h3>Restaurant & Food Service Jobs</h3>
+      <p>Cooks, servers, baristas, kitchen staff at Milton's restaurants and cafes.</p>
+      <span class="job-tag">Flexible Hours</span>
+    </a>
+    <a href="/jobs/healthcare-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#129658;</div>
+      <h3>Healthcare Jobs</h3>
+      <p>Nursing, PSW, medical admin, dental hygienist positions at Milton District Hospital and clinics.</p>
+      <span class="job-tag">Growing Sector</span>
+    </a>
+    <a href="/jobs/construction-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#127959;</div>
+      <h3>Construction & Trades Jobs</h3>
+      <p>Carpenters, electricians, plumbers, HVAC techs in Milton's booming construction sector.</p>
+      <span class="job-tag">Skilled Trades</span>
+    </a>
+    <a href="/jobs/truck-driving-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128666;</div>
+      <h3>Truck Driving & Delivery Jobs</h3>
+      <p>AZ/DZ drivers, delivery drivers, courier positions across Halton Region.</p>
+      <span class="job-tag">License Required</span>
+    </a>
+    <a href="/jobs/office-admin-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128188;</div>
+      <h3>Office & Admin Jobs</h3>
+      <p>Receptionist, administrative assistant, data entry, and office management roles.</p>
+      <span class="job-tag">Professional</span>
+    </a>
+    <a href="/jobs/education-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#127979;</div>
+      <h3>Education & Teaching Jobs</h3>
+      <p>Teachers, ECEs, tutors, educational assistants at HDSB and HCDSB schools.</p>
+      <span class="job-tag">Rewarding</span>
+    </a>
+    <a href="/jobs/it-tech-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128187;</div>
+      <h3>IT & Technology Jobs</h3>
+      <p>Software developers, IT support, network engineers, and tech roles.</p>
+      <span class="job-tag">Remote Options</span>
+    </a>
+    <a href="/jobs/accounting-finance-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#128202;</div>
+      <h3>Accounting & Finance Jobs</h3>
+      <p>Bookkeepers, accountants, financial advisors, and banking positions.</p>
+      <span class="job-tag">Professional</span>
+    </a>
+    <a href="/jobs/real-estate-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#127968;</div>
+      <h3>Real Estate Jobs</h3>
+      <p>Real estate agents, property managers, mortgage brokers in Milton's housing market.</p>
+      <span class="job-tag">Commission-Based</span>
+    </a>
+    <a href="/jobs/cleaning-janitorial-jobs-milton.html" class="job-card">
+      <div class="job-icon">&#129529;</div>
+      <h3>Cleaning & Janitorial Jobs</h3>
+      <p>Commercial cleaning, residential cleaning, janitorial services positions.</p>
+      <span class="job-tag">Flexible Schedule</span>
+    </a>
+  </div>
+  <div class="text-center" style="margin-top:var(--space-8);">
+    <p style="color:var(--text-tertiary);font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Explore all 35+ job categories for Milton, Ontario</p>
+  </div>
+</section>
+
+<!-- Community Stats -->
+<section class="community-stats" aria-label="Community statistics">
+  <div class="section-header">
+    <h2>Milton by the Numbers</h2>
+    <p>A snapshot of Milton's vibrant community</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">&#127963;</div>
+      <div class="stat-number" id="statTotalBusinesses">0</div>
+      <div class="stat-label">Local Businesses Listed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#128203;</div>
+      <div class="stat-number" id="statCategories">0</div>
+      <div class="stat-label">Business Categories</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#127968;</div>
+      <div class="stat-number" id="statNeighborhoods">0</div>
+      <div class="stat-label">Neighborhoods Covered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#128176;</div>
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Free for Everyone</div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section" id="about" aria-label="About MiltonJobs.com">
+  <div class="about-content">
+    <div class="about-text">
+      <h2>About MiltonJobs.com</h2>
+      <p>MiltonJobs.com is a free, community-driven resource dedicated to connecting Milton residents with local businesses, services, and career opportunities. Milton is one of Canada's fastest-growing towns, and we're here to help you navigate everything it has to offer.</p>
+      <p>Whether you're looking for the best restaurants on Main Street, need a trustworthy mechanic, or searching for your next career opportunity, MiltonJobs.com has you covered.</p>
+
+      <div class="about-features">
+        <div class="about-feature">
+          <div class="feature-icon">&#128270;</div>
+          <div>
+            <h3>Comprehensive Directory</h3>
+            <p>Hundreds of verified Milton businesses across all categories</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">&#128188;</div>
+          <div>
+            <h3>Job Opportunities</h3>
+            <p>35+ job categories covering all of Milton's key industries</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">&#127968;</div>
+          <div>
+            <h3>Neighborhood Guides</h3>
+            <p>Explore businesses by neighbourhood across Milton</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">&#128176;</div>
+          <div>
+            <h3>100% Free</h3>
+            <p>No charges, no premium tiers &mdash; free for businesses and residents</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-image">
+      <div class="map-icon">&#128205;</div>
+      <h3>Milton, Ontario</h3>
+      <p>Halton Region &bull; Greater Toronto Area<br>Population: 140,000+<br>One of Canada's fastest-growing communities</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section section-alt" aria-label="Frequently asked questions">
+  <div class="section-header">
+    <h2>Frequently Asked Questions</h2>
+    <p>Common questions about Milton businesses and jobs</p>
+  </div>
+  <div class="faq-container">
+    <div class="faq-item">
+      <button class="faq-question">
+        What types of businesses are listed on MiltonJobs.com?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>MiltonJobs.com lists hundreds of real, verified businesses across Milton, Ontario including restaurants, coffee shops, grocery stores, pharmacies, dental clinics, medical offices, auto repair shops, hair salons, gyms, banks, real estate agencies, law offices, schools, churches, and many more categories. All businesses are physically located in Milton, ON.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Is MiltonJobs.com really free?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>Yes! MiltonJobs.com is completely free for everyone. There are no charges to browse the directory, search for businesses, or explore job listings. Business owners can also be listed at no cost.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What are the biggest employers in Milton, Ontario?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>Milton's largest employers include Amazon (fulfilment centre), the Town of Milton, Halton District School Board, Halton Catholic District School Board, Milton District Hospital, and numerous warehousing and distribution companies along the Highway 401 corridor. Retail, construction, and healthcare are also major employment sectors.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        How can I add my business to MiltonJobs.com?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>You can submit your Milton business for free using our contact form below. Just provide your business name, category, address, and contact information. We'll verify and add it to the directory promptly.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What neighbourhoods does the directory cover?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>Our directory covers all Milton neighbourhoods including Downtown Milton, Old Milton, Timberlea, Harrison, Scott, Willmott, Dempsey, Bronte Meadows, and the commercial/industrial areas along Highway 401, James Snow Parkway, and Ontario Street South.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What job opportunities are available in Milton?
+        <svg class="faq-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <p>Milton has strong job opportunities across warehouse and logistics, retail, healthcare, construction and trades, food service, education, IT, finance, transportation, and customer service. The town's rapid growth means constant demand for workers across all sectors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section" aria-label="Newsletter signup">
+  <div class="newsletter-content">
+    <h2>Stay Updated</h2>
+    <p>Get notified about new Milton businesses, job postings, and community events.</p>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" placeholder="Enter your email address" required aria-label="Email address for newsletter">
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section" id="contact" aria-label="Contact us">
+  <div class="contact-content">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>Have a question, suggestion, or want to add your business? We'd love to hear from you.</p>
+      <div class="contact-methods">
+        <div class="contact-method">
+          <div class="method-icon">&#128231;</div>
+          <div>
+            <h3>Email</h3>
+            <p>hello@miltonjobs.com</p>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="method-icon">&#128205;</div>
+          <div>
+            <h3>Location</h3>
+            <p>Milton, Ontario, Canada</p>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="method-icon">&#128337;</div>
+          <div>
+            <h3>Response Time</h3>
+            <p>Within 24 hours</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>Send a Message</h3>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactName">Name</label>
+            <input type="text" id="contactName" required placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="email" id="contactEmail" required placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contactSubject">Subject</label>
+          <select id="contactSubject">
+            <option>Add My Business</option>
+            <option>Update Business Info</option>
+            <option>Report an Issue</option>
+            <option>General Question</option>
+            <option>Partnership Inquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" rows="4" required placeholder="Tell us what you need..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <a href="/" class="logo">
+        <div class="logo-icon">M</div>
+        Milton<span>Jobs</span>.com
+      </a>
+      <p>Your free, comprehensive guide to businesses, services, and job opportunities in Milton, Ontario. Built by the community, for the community.</p>
+    </div>
+    <div class="footer-column">
+      <h4>Directory</h4>
+      <ul>
+        <li><a href="#directory">All Businesses</a></li>
+        <li><a href="/jobs/restaurant-jobs-milton.html">Restaurants</a></li>
+        <li><a href="#directory">Healthcare</a></li>
+        <li><a href="#directory">Services</a></li>
+        <li><a href="#directory">Retail</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Jobs</h4>
+      <ul>
+        <li><a href="/jobs/warehouse-jobs-milton.html">Warehouse Jobs</a></li>
+        <li><a href="/jobs/retail-jobs-milton.html">Retail Jobs</a></li>
+        <li><a href="/jobs/healthcare-jobs-milton.html">Healthcare Jobs</a></li>
+        <li><a href="/jobs/construction-jobs-milton.html">Construction Jobs</a></li>
+        <li><a href="/jobs/truck-driving-jobs-milton.html">Driving Jobs</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>About</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="/robots.txt">Robots.txt</a></li>
+        <li><a href="/llms.txt">LLMs.txt</a></li>
+        <li><a href="/humans.txt">Humans.txt</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024&ndash;2026 MiltonJobs.com &mdash; A free community resource for Milton, Ontario.</p>
+    <div class="footer-bottom-links">
+      <a href="/sitemap.xml">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Business Detail Modal -->
+<div class="modal-overlay" id="businessModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Business Details</h2>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- Scripts -->
+<script src="/js/app.js"></script>
+<script src="/js/seo-optimization.js"></script>
+
+</body>
+</html>
